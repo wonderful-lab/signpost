@@ -1,0 +1,44 @@
+name: Update calendar data
+
+# Server-side calendar fetch (DAKboard-style): this workflow polls the
+# calendar's iCal feed and commits events.json; the signage page itself
+# only renders the JSON.
+on:
+  schedule:
+    - cron: "7 * * * *" # hourly, at :07
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-calendar
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install icalendar recurring-ical-events
+
+      - name: Fetch calendar
+        run: python tools/fetch_calendar.py
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- events.json; then
+            echo "No changes."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add events.json
+            git commit -m "Update events.json"
+            git push
+          fi
