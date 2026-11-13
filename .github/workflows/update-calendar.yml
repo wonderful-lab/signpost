@@ -1,0 +1,35 @@
+name: Update calendar data
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: 'update-calendar'
+  cancel-in-progress: true
+jobs:
+  update-calendar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm ci
+      - name: Fetch latest calendar data
+        run: npm run fetch-calendar
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet events.json; then
+            echo 'No changes.';
+          else
+            git add events.json
+            git commit -m "Update events.json (GH Actions)"
+            git push
+          fi
