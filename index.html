@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signpost</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header>
+    <div class="facility" id="facilityName">Signpost</div>
+    <div class="clockbox">
+      <div class="date" id="dateText">----/--/--</div>
+      <div class="clock" id="clockText">--:--</div>
+    </div>
+    <div class="weather" id="weatherBox">
+      <div class="weather-main"><span id="weatherIcon">--</span> <span id="weatherTemp">--°</span></div>
+      <div class="weather-sub" id="weatherSub">天気を取得中…</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="today">
+      <h2>今日の予定</h2>
+      <div id="todayEvents" class="events"></div>
+    </section>
+    <section class="upcoming">
+      <h2>今後の予定</h2>
+      <div id="upcomingEvents" class="events"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span id="updatedAt">データ読み込み中…</span>
+  </footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
