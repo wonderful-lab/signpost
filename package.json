@@ -1,0 +1,19 @@
+{
+  "name": "signpost",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "fetch-calendar": "tsx tools/fetch-calendar.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "tsx": "^4.8.2",
+    "@types/node": "^20.11.30"
+  },
+  "dependencies": {
+    "ical.js": "^1.4.0",
+    "node-fetch": "^3.3.2"
+  }
+}

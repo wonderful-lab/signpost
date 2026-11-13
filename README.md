@@ -28,8 +28,8 @@ DAKboard と同じ方式で表示する: 取得はサーバー側（GitHub Actio
 ## ローカルでのデータ生成
 
 ```bash
-pip install icalendar recurring-ical-events
-python tools/fetch_calendar.py
+npm install
+npm run fetch-calendar
 ```
 
 ## 今後の拡張アイデア

@@ -20,13 +20,11 @@
   </header>
 
   <main>
-    <section class="today">
-      <h2>今日の予定</h2>
-      <div id="todayEvents" class="events"></div>
-    </section>
-    <section class="upcoming">
-      <h2>今後の予定</h2>
-      <div id="upcomingEvents" class="events"></div>
+    <section class="calendar" id="calendarSection">
+      <div class="calendar-header">
+        <span id="calendarMonth"></span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
     </section>
   </main>
 
@@ -34,6 +32,6 @@
     <span id="updatedAt">データ読み込み中…</span>
   </footer>
 
-<script src="assets/app.js"></script>
+<script type="module" src="assets/app.js"></script>
 </body>
 </html>
