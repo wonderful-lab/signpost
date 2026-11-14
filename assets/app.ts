@@ -168,22 +168,15 @@ const WMO: Record<number, [string, string]> = {
 };
 
 async function loadWeather(): Promise<void> {
-  const w = config.weather;
-  const url =
-    "https://api.open-meteo.com/v1/forecast?latitude=" + w.latitude +
-    "&longitude=" + w.longitude +
-    "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=" +
-    encodeURIComponent(config.timezone);
   try {
-    const res = await fetch(url);
+    const res = await fetch("events.json?t=" + Date.now());
     const j = await res.json();
-    const code: number = j.current.weather_code;
-    const [icon, label] = WMO[code] || ["🌡️", ""];
+    const weather = j.weather;
+    if (!weather) throw new Error("No weather field");
+    const [icon, label] = WMO[weather.weatherCode] || ["🌡️", ""];
     $("weatherIcon").textContent = icon;
-    $("weatherTemp").textContent = Math.round(j.current.temperature_2m) + "°";
-    const hi = Math.round(j.daily.temperature_2m_max[0]);
-    const lo = Math.round(j.daily.temperature_2m_min[0]);
-    $("weatherSub").textContent = `${w.label} ${label}　最高 ${hi}° / 最低 ${lo}°`;
+    $("weatherTemp").textContent = Math.round(weather.tempC) + "°";
+    $("weatherSub").textContent = `${config.weather.label} ${label}　最高 ${Math.round(weather.highC)}° / 最低 ${Math.round(weather.lowC)}°`;
   } catch (e) {
     $("weatherSub").textContent = "天気を取得できませんでした";
   }

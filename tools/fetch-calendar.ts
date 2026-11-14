@@ -114,9 +114,64 @@ async function main(): Promise<number> {
     events.sort((a, b) => a.start.localeCompare(b.start));
   }
 
+  // ---- Weather injection (TASK3) ----
+  let weather = undefined;
+  let existingWeather = undefined;
+  try {
+    // Read existing events.json if present
+    let existing;
+    try {
+      existing = JSON.parse(await readFile(EVENTS_PATH, "utf8"));
+      existingWeather = existing.weather;
+    } catch (_) {
+      existing = undefined;
+      existingWeather = undefined;
+    }
+    // Get today (local) in YYYY-MM-DD
+    const todayLocal = new Date(now.toLocaleString("en-US", { timeZone: tz }));
+    const yyyy = todayLocal.getFullYear();
+    const mm = String(todayLocal.getMonth() + 1).padStart(2, "0");
+    const dd = String(todayLocal.getDate()).padStart(2, "0");
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    if (existingWeather && existingWeather.date === todayStr) {
+      weather = existingWeather;
+    } else {
+      // Try fetch new weather
+      let url = process.env.OPEN_METEO_URL;
+      if (!url) {
+        url =
+          "https://api.open-meteo.com/v1/forecast?latitude=" + config.weather.latitude +
+          "&longitude=" + config.weather.longitude +
+          "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=" +
+          encodeURIComponent(tz);
+      }
+      try {
+        const fetch = (await import("node-fetch")).default;
+        const resp = await fetch(url, { headers: { "User-Agent": "signpost-weather-fetcher" }, timeout: 60000 });
+        const j = await resp.json();
+        if (j.error) throw new Error(String(j.reason || "weather api error"));
+        weather = {
+          date: todayStr,
+          fetchedAt: toLocalISO(new Date()),
+          tempC: j.current.temperature_2m,
+          weatherCode: j.current.weather_code,
+          highC: j.daily.temperature_2m_max[0],
+          lowC: j.daily.temperature_2m_min[0],
+        };
+      } catch(e) {
+        console.warn("[weather] fetch failed:", e);
+        if (existingWeather) weather = existingWeather;
+      }
+    }
+  } catch(e) {
+    console.warn("[weather] error:", e);
+    weather = undefined;
+  }
   const out: EventData = {
     generatedAt: toLocalISO(new Date()),
     events,
+    ...(weather ? { weather } : {}),
   };
   await writeFile(EVENTS_PATH, JSON.stringify(out, null, 1), "utf8");
   console.log(`wrote events.json with ${events.length} events`);
