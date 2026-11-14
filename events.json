@@ -1,12 +1,12 @@
 {
- "generatedAt": "2026-11-14T14:42:25+00:00",
+ "generatedAt": "2026-11-14T15:38:30+00:00",
  "events": [],
  "weather": {
-  "date": "2026-11-14",
-  "fetchedAt": "2026-11-14T11:30:00+09:00",
-  "tempC": 17.4,
+  "date": "2026-11-15",
+  "fetchedAt": "2026-11-14T15:38:30+00:00",
+  "tempC": 17,
   "weatherCode": 51,
-  "highC": 17.5,
-  "lowC": 13.4
+  "highC": 18.1,
+  "lowC": 16.2
  }
 }
