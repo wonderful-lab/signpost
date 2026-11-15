@@ -143,7 +143,7 @@ async function main(): Promise<number> {
         url =
           "https://api.open-meteo.com/v1/forecast?latitude=" + config.weather.latitude +
           "&longitude=" + config.weather.longitude +
-          "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=" +
+          "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=" +
           encodeURIComponent(tz);
       }
       try {
@@ -151,6 +151,21 @@ async function main(): Promise<number> {
         const resp = await fetch(url, { headers: { "User-Agent": "signpost-weather-fetcher" }, timeout: 60000 });
         const j = await resp.json();
         if (j.error) throw new Error(String(j.reason || "weather api error"));
+        // Assemble 5-day weather
+        let days;
+        const daily = j.daily;
+        if (daily && daily.time && Array.isArray(daily.time)) {
+          days = [];
+          const len = Math.min(5, daily.time.length);
+          for (let i = 0; i < len; ++i) {
+            days.push({
+              date: daily.time[i],
+              weatherCode: daily.weather_code?.[i] ?? 0,
+              highC: daily.temperature_2m_max?.[i] ?? null,
+              lowC: daily.temperature_2m_min?.[i] ?? null,
+            });
+          }
+        }
         weather = {
           date: todayStr,
           fetchedAt: toLocalISO(new Date()),
@@ -158,7 +173,9 @@ async function main(): Promise<number> {
           weatherCode: j.current.weather_code,
           highC: j.daily.temperature_2m_max[0],
           lowC: j.daily.temperature_2m_min[0],
+          ...(days ? { days } : {}),
         };
+
       } catch(e) {
         console.warn("[weather] fetch failed:", e);
         if (existingWeather) weather = existingWeather;

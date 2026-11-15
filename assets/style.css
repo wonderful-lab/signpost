@@ -1,10 +1,13 @@
 :root {
-  --bg: #0d1117;
-  --panel: #161b22;
-  --text: #f0f6fc;
-  --sub: #9da7b3;
-  --accent: #58a6ff;
-  --today: #f778ba;
+  --bg: #fff;
+  --panel: #f6f8fa;
+  --text: #24292f;
+  --sub: #57606a;
+  --accent: #1f883d;
+  --line: #d0d7de;
+  --today-bg: #e6f4ea;
+  --today-text: #1f883d;
+  --bar: #57606a;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -17,21 +20,304 @@ body {
   padding: 2.5vh 3vw;
   overflow: hidden;
 }
-header {
+.signpost-header {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 2vw;
-  padding-bottom: 2vh;
-  border-bottom: 2px solid var(--panel);
+  align-items: flex-end;
+  padding-bottom: 0;
+  background: var(--bg);
 }
-.facility { font-size: 3.2vw; font-weight: 700; align-self: center; }
-.clockbox { text-align: center; }
-.clockbox .date { font-size: 1.6vw; color: var(--sub); }
-.clockbox .clock { font-size: 5.5vw; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
-.weather { text-align: right; min-width: 14vw; }
-.weather-main { font-size: 3vw; font-weight: 700; }
-.weather-sub { font-size: 1.3vw; color: var(--sub); margin-top: 0.5vh; }
+.sp-header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  gap: 3vh;
+}
+.sp-clockbox {
+  display: flex;
+  align-items: baseline;
+  gap: 2vw;
+}
+.sp-clock {
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.06;
+}
+.sp-facility-badge {
+  margin-left: 1.2vw;
+  font-size: 18px;
+  font-weight: 600;
+  border: 1.5px solid var(--line);
+  color: var(--text);
+  padding: 2px 18px;
+  border-radius: 24px;
+  background: var(--panel);
+  user-select: none;
+  align-self: flex-end;
+}
+.sp-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 0;
+}
+.sp-date {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+}
+.sp-weather-box {
+  font-size: 17px;
+  color: var(--sub);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 9px;
+}
+.sp-weather-box > #weatherIcon {
+  font-size: 22px;
+  margin-right: 1px;
+}
+.sp-weather-box > #weatherTemp {
+  font-size: 20px;
+  font-weight: 700;
+}
+.sp-weather-box > #weatherSub {
+  font-size: 15px;
+  margin-left: 7px;
+}
+.sp-header-divider {
+  border-bottom: 1.5px solid var(--line);
+  margin: 22px 0 28px 0;
+}
+
+/* --- 天気予報カード --- */
+.weather-forecast-section {
+  margin-bottom: 32px;
+  width: 100%;
+}
+.weather-forecast-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 19px;
+}
+.weather-forecast-title {
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.weather-forecast-loc {
+  font-size: 15px;
+  color: var(--sub);
+  font-weight: 500;
+  padding-right: 3px;
+}
+.weather-forecast-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 0 5px 0;
+  width: 100%;
+  min-height: 52px;
+}
+.weather-forecast-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 13px;
+  min-height: 36px;
+  font-size: 17px;
+  gap: 11px;
+  justify-content: space-between;
+}
+.weather-forecast-row:not(:last-child) {}
+.weather-forecast-sep {
+  border-bottom: 1px solid var(--line);
+  margin: 0 0.5vw;
+  height: 0px;
+}
+.weather-forecast-date {
+  font-weight: 700;
+  color: var(--text);
+  margin-right: 10px;
+  min-width: 52px;
+  display: inline-block;
+}
+.weather-forecast-date-today {
+  color: var(--accent)!important;
+  font-weight: 900;
+}
+.weather-forecast-today {
+  background: var(--today-bg);
+  border-radius: 6px;
+}
+.weather-forecast-icon {
+  font-size: 18px;
+  margin-right: 3px;
+}
+.weather-forecast-label {
+  margin-right: 16px;
+  font-weight: 400;
+  color: var(--sub);
+}
+.weather-forecast-tempbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 250px;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  gap: 8px;
+}
+.weather-forecast-track {
+  position: relative;
+  flex: 1 1 auto;
+  height: 9px;
+  border-radius: 5px;
+  background: #eaeef2;
+}
+.weather-forecast-low {
+  font-size: 15px;
+  color: var(--sub);
+  font-weight: 500;
+}
+.weather-forecast-high {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 600;
+}
+.weather-forecast-bar {
+  display: inline-block;
+  height: 9px;
+  border-radius: 5px;
+  background: var(--bar);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+.weather-forecast-bar-today {
+  background: var(--accent)!important;
+}
+
+/* --- カレンダー --- */
+.calendar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 18px 14px 20px 14px;
+  margin-bottom: 16px;
+  margin-top: 0px;
+  box-sizing: border-box;
+}
+.calendar-header {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+  margin-bottom: 17px;
+  margin-left: 6px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  width: 100%;
+  height: 100%;
+  gap: 0.3vw;
+  background: transparent;
+  min-height: 330px;
+}
+.calendar-dow {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sub);
+  text-align: center;
+  background: none;
+  border: none;
+  padding: 0.4vw 0 0.1vw 0;
+  user-select: none;
+}
+.calendar-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: transparent;
+  border-radius: 8px;
+  padding: 1vh 0.3vw 0.7vh 0.3vw;
+  min-height: 12vh;
+  position: relative;
+  border: none;
+  overflow: hidden;
+}
+.calendar-today {
+  background: var(--today-bg);
+  border-radius: 8px;
+}
+.calendar-today .calendar-day {
+  color: var(--today-text)!important;
+  font-weight: 900;
+  background: none;
+}
+.calendar-dim {
+  opacity: 0.4;
+}
+.calendar-day {
+  font-size: 1.15vw;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5vh;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.calendar-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  width: 100%;
+}
+.calendar-chip {
+  background: var(--line);
+  color: var(--accent);
+  border-radius: 7px;
+  padding: 0.08em 0.3em 0.01em 0.3em;
+  font-size: 1vw;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.calendar-chip-all-day {
+  background: var(--sub);
+  color: var(--bg);
+}
+.calendar-more {
+  color: var(--sub);
+  font-size: 0.9vw;
+  margin-top: 0.1vh;
+  font-weight: 700;
+}
+footer {
+  padding-top: 1.5vh;
+  color: var(--sub);
+  font-size: 1.1vw;
+  text-align: right;
+}
+
 main {
   flex: 1;
   display: flex;

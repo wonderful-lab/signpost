@@ -7,26 +7,42 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <header>
-    <div class="facility" id="facilityName">Signpost</div>
-    <div class="clockbox">
-      <div class="date" id="dateText">----/--/--</div>
-      <div class="clock" id="clockText">--:--</div>
+  <header class="signpost-header">
+  <div class="sp-header-left">
+    <div class="sp-clockbox">
+      <span class="sp-clock" id="clockText">--:--</span>
+      <span class="sp-facility-badge" id="facilityName">Signpost</span>
     </div>
-    <div class="weather" id="weatherBox">
-      <div class="weather-main"><span id="weatherIcon">--</span> <span id="weatherTemp">--°</span></div>
-      <div class="weather-sub" id="weatherSub">天気を取得中…</div>
+  </div>
+  <div class="sp-header-right">
+    <div class="sp-date" id="dateText">----/--/--</div>
+    <div class="sp-weather-box" id="weatherBox">
+      <span id="weatherIcon">--</span>
+      <span id="weatherTemp">--°</span>
+      <span id="weatherSub">天気を取得中…</span>
     </div>
-  </header>
+  </div>
+</header>
+<div class="sp-header-divider"></div>
 
-  <main>
-    <section class="calendar" id="calendarSection">
-      <div class="calendar-header">
-        <span id="calendarMonth"></span>
-      </div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-    </section>
-  </main>
+<main>
+  <section class="weather-forecast-section">
+    <div class="weather-forecast-header">
+      <span class="weather-forecast-title">天気予報</span>
+      <span class="weather-forecast-loc" id="weatherForecastLoc">Tokyo</span>
+    </div>
+    <div class="weather-forecast-card" id="weatherForecastCard">
+      <!-- 動的に天気予報をここに描画 -->
+    </div>
+  </section>
+
+  <section class="calendar" id="calendarSection">
+    <div class="calendar-header">
+      <span id="calendarMonth"></span>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </section>
+</main>
 
   <footer>
     <span id="updatedAt">データ読み込み中…</span>

@@ -21,6 +21,13 @@ export interface Event {
   location?: string;
 }
 
+export interface WeatherDay {
+  date: string;
+  weatherCode: number;
+  highC: number;
+  lowC: number;
+}
+
 export interface WeatherData {
   date: string;        // YYYY-MM-DD（config.timezone での日付）
   fetchedAt: string;   // ISO文字列
@@ -28,6 +35,7 @@ export interface WeatherData {
   weatherCode: number;
   highC: number;
   lowC: number;
+  days?: WeatherDay[];
 }
 
 export interface EventData {
