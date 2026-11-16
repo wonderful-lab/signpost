@@ -194,8 +194,15 @@ function renderWeatherForecast(weather) {
         const row = document.createElement("div");
         row.className = "weather-forecast-row" + (d.date === todayStr ? " weather-forecast-today" : "");
         // Left: 日付/曜日
-        const dt = new Date(d.date + "T00:00+09:00");
-        const dateStr = `${dt.getDate()}（${"日月火水木金土".charAt(dt.getDay())}）`;
+        // 日付と曜日を施設タイムゾーンで計算
+        const tz = config.timezone;
+        const dtFmt = new Intl.DateTimeFormat("ja-JP-u-ca-gregory", {
+            timeZone: tz, day: "numeric", weekday: "short"
+        });
+        const parts = dtFmt.formatToParts(new Date(d.date + "T00:00:00Z"));
+        const dayNum = parts.find(p => p.type === "day")?.value || "";
+        const weekday = parts.find(p => p.type === "weekday")?.value.replace(/\((.)\)/, "$1") || "";
+        const dateStr = `${dayNum}（${weekday}）`;
         const dateDiv = document.createElement("span");
         dateDiv.className = "weather-forecast-date" + (d.date === todayStr ? " weather-forecast-date-today" : "");
         dateDiv.textContent = dateStr;
