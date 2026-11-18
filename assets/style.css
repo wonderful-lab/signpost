@@ -9,6 +9,21 @@
   --today-text: #1f883d;
   --bar: #57606a;
 }
+
+.ai-comment {
+  margin: 18px 0 16px 0;
+  padding: 7px 18px;
+  font-size: 15px;
+  color: var(--sub);
+  background: var(--panel);
+  border-left: 5px solid var(--accent);
+  border-radius: 7px;
+  min-height: 1.4em;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body {

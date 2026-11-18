@@ -42,4 +42,5 @@ export interface EventData {
   generatedAt: string;
   events: Event[];
   weather?: WeatherData;
+  comment?: { date: string; text: string; model?: string; generatedAt?: string };
 }

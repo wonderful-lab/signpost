@@ -269,7 +269,19 @@ async function loadWeather() {
 async function loadEvents() {
     try {
         const res = await fetch("events.json?t=" + Date.now());
-        renderEvents(await res.json());
+        const data = await res.json();
+        renderEvents(data);
+        // --- AI comment rendering ---
+        const aiDiv = document.getElementById("aiComment");
+        if (aiDiv) {
+            if (data.comment?.text) {
+                aiDiv.textContent = data.comment.text;
+                aiDiv.removeAttribute("hidden");
+            }
+            else {
+                aiDiv.setAttribute("hidden", "true");
+            }
+        }
     }
     catch (e) {
         $("updatedAt").textContent = "予定データを読み込めませんでした";

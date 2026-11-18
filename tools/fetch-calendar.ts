@@ -117,15 +117,19 @@ async function main(): Promise<number> {
   // ---- Weather injection (TASK3) ----
   let weather = undefined;
   let existingWeather = undefined;
+  let comment = undefined;
+  let existingComment = undefined;
   try {
     // Read existing events.json if present
     let existing;
     try {
       existing = JSON.parse(await readFile(EVENTS_PATH, "utf8"));
       existingWeather = existing.weather;
+      existingComment = existing.comment;
     } catch (_) {
       existing = undefined;
       existingWeather = undefined;
+      existingComment = undefined;
     }
     // Get today (local) in YYYY-MM-DD
     const todayLocal = new Date(now.toLocaleString("en-US", { timeZone: tz }));
@@ -175,20 +179,105 @@ async function main(): Promise<number> {
           lowC: j.daily.temperature_2m_min[0],
           ...(days ? { days } : {}),
         };
-
       } catch(e) {
         console.warn("[weather] fetch failed:", e);
         if (existingWeather) weather = existingWeather;
       }
     }
+
+    // ---- AI 一言コメント injection (TASK6) ----
+    // 条件 (a): 天気を新規取得した, または (b): 既存 comment が無い/日付不一致
+    const weatherNewlyFetched = !(existingWeather && existingWeather.date === todayStr);
+    const commentNeedsUpdate = !existingComment || existingComment.date !== todayStr;
+    const shouldUpdateComment = weatherNewlyFetched || commentNeedsUpdate;
+    const githubToken = process.env.GITHUB_TOKEN;
+
+    if (shouldUpdateComment && githubToken) {
+      try {
+        // Assemble prompt info
+        // 予定: 本日の予定だけ
+        const todayEvents = events.filter(ev => {
+          const evDate = new Date(ev.start).toLocaleString("en-US", { timeZone: tz });
+          const d = new Date(evDate);
+          return d.getFullYear() === todayLocal.getFullYear() && d.getMonth() === todayLocal.getMonth() && d.getDate() === todayLocal.getDate();
+        });
+        const eventSummaries = todayEvents.map(ev => {
+          // Remove T... for allDay events
+          const start = ev.start.slice(11, 16);
+          const end = ev.end.slice(11, 16);
+          let title = ev.title || "";
+          return `${start}-${end} ${title}`.trim();
+        });
+        const eventSummary = `本日の予定（${todayEvents.length}件）: ${eventSummaries.slice(0,5).join(' / ')}`;
+
+        let weatherSummary = '';
+        if (weather) {
+          let desc = '';
+          if (weather.weatherCode !== undefined) {
+            // Try map to icon/desc
+            const WMO = {
+              0: "晴れ", 1: "晴れ時々曇り", 2: "曇りがち", 3: "曇り", 45: "霧", 48: "霧",
+              51: "小雨", 53: "小雨", 55: "雨", 61: "雨", 63: "雨", 65: "大雨",
+              71: "雪", 73: "雪", 75: "大雪", 80: "にわか雨", 81: "にわか雨", 82: "激しいにわか雨", 95: "雷雨",
+            };
+            desc = WMO[weather.weatherCode] || '';
+          }
+          weatherSummary = `天気: ${desc}　最高${Math.round(weather.highC)}° 最低${Math.round(weather.lowC)}°`;
+        }
+
+        const sysPrompt = "あなたはサイネージ用AIです。施設の当日予定と天気に触れ、皆に役立つ一言コメント（日本語40字以内）を生成してください。短く、丁寧で断定しすぎない表現とし、コメント本文だけを返答してください。";
+        const userPrompt = `日付: ${todayStr}\n${eventSummary}\n${weatherSummary}`;
+        const body = JSON.stringify({
+          model: "openai/gpt-4o-mini",
+          messages: [
+            { role: "system", content: sysPrompt },
+            { role: "user", content: userPrompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 120
+        });
+        const fetch = (await import("node-fetch")).default;
+        const resp = await fetch("https://models.github.ai/inference/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${githubToken}`,
+            "Content-Type": "application/json"
+          },
+          body,
+          signal: AbortSignal.timeout(30000)
+        });
+        if (!resp.ok) throw new Error(`AI API error: ${resp.status}`);
+        const json = await resp.json();
+        let msg = json?.choices?.[0]?.message?.content?.trim?.() ?? "";
+        msg = msg.replace(/\n/g, "");
+        if (msg.length > 60) msg = msg.slice(0, 60);
+        if (msg) {
+          comment = {
+            date: todayStr,
+            text: msg,
+            model: "openai/gpt-4o-mini",
+            generatedAt: toLocalISO(new Date())
+          };
+        } else if (existingComment) {
+          comment = existingComment;
+        }
+      } catch(e) {
+        console.warn("[ai-comment] fetch failed:", e);
+        if (existingComment) comment = existingComment;
+      }
+    } else if (existingComment && (!shouldUpdateComment || !githubToken)) {
+      comment = existingComment;
+    }
   } catch(e) {
-    console.warn("[weather] error:", e);
+    console.warn("[weather/ai-comment] error:", e);
     weather = undefined;
+    comment = existingComment;
   }
   const out: EventData = {
     generatedAt: toLocalISO(new Date()),
     events,
     ...(weather ? { weather } : {}),
+    ...(comment ? { comment } : {}),
   };
   await writeFile(EVENTS_PATH, JSON.stringify(out, null, 1), "utf8");
   console.log(`wrote events.json with ${events.length} events`);
