@@ -190,9 +190,14 @@ async function main(): Promise<number> {
     const weatherNewlyFetched = !(existingWeather && existingWeather.date === todayStr);
     const commentNeedsUpdate = !existingComment || existingComment.date !== todayStr;
     const shouldUpdateComment = weatherNewlyFetched || commentNeedsUpdate;
-    const githubToken = process.env.GITHUB_TOKEN;
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+    let geminiApiUrl = process.env.GEMINI_API_URL;
+    if (!geminiApiUrl) {
+      geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
+    }
 
-    if (shouldUpdateComment && githubToken) {
+    if (shouldUpdateComment && geminiApiKey) {
       try {
         // Assemble prompt info
         // 予定: 本日の予定だけ
@@ -202,7 +207,6 @@ async function main(): Promise<number> {
           return d.getFullYear() === todayLocal.getFullYear() && d.getMonth() === todayLocal.getMonth() && d.getDate() === todayLocal.getDate();
         });
         const eventSummaries = todayEvents.map(ev => {
-          // Remove T... for allDay events
           const start = ev.start.slice(11, 16);
           const end = ev.end.slice(11, 16);
           let title = ev.title || "";
@@ -214,7 +218,6 @@ async function main(): Promise<number> {
         if (weather) {
           let desc = '';
           if (weather.weatherCode !== undefined) {
-            // Try map to icon/desc
             const WMO = {
               0: "晴れ", 1: "晴れ時々曇り", 2: "曇りがち", 3: "曇り", 45: "霧", 48: "霧",
               51: "小雨", 53: "小雨", 55: "雨", 61: "雨", 63: "雨", 65: "大雨",
@@ -228,34 +231,39 @@ async function main(): Promise<number> {
         const sysPrompt = "あなたはサイネージ用AIです。施設の当日予定と天気に触れ、皆に役立つ一言コメント（日本語40字以内）を生成してください。短く、丁寧で断定しすぎない表現とし、コメント本文だけを返答してください。";
         const userPrompt = `日付: ${todayStr}\n${eventSummary}\n${weatherSummary}`;
         const body = JSON.stringify({
-          model: "openai/gpt-4o-mini",
-          messages: [
-            { role: "system", content: sysPrompt },
-            { role: "user", content: userPrompt }
-          ],
-          temperature: 0.7,
-          max_tokens: 120
+          systemInstruction: { parts: [{ text: sysPrompt }] },
+          contents: [ { role: 'user', parts: [{ text: userPrompt }] } ],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
         });
         const fetch = (await import("node-fetch")).default;
-        const resp = await fetch("https://models.github.ai/inference/chat/completions", {
+        const resp = await fetch(geminiApiUrl, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${githubToken}`,
+            "x-goog-api-key": geminiApiKey,
             "Content-Type": "application/json"
           },
           body,
           signal: AbortSignal.timeout(30000)
         });
-        if (!resp.ok) throw new Error(`AI API error: ${resp.status}`);
-        const json = await resp.json();
-        let msg = json?.choices?.[0]?.message?.content?.trim?.() ?? "";
+        const bodyText = await resp.text();
+        if (!resp.ok) throw new Error(`Gemini API error: ${resp.status} - ${bodyText.slice(0, 200)}`);
+        let json;
+        try {
+          json = JSON.parse(bodyText);
+        } catch(e) {
+          throw new Error('Gemini response is not valid JSON: ' + bodyText.slice(0, 200));
+        }
+        let msg = '';
+        if (json?.candidates?.[0]?.content?.parts && Array.isArray(json.candidates[0].content.parts)) {
+          msg = json.candidates[0].content.parts.map(p => p.text || '').join('').trim();
+        }
         msg = msg.replace(/\n/g, "");
         if (msg.length > 60) msg = msg.slice(0, 60);
         if (msg) {
           comment = {
             date: todayStr,
             text: msg,
-            model: "openai/gpt-4o-mini",
+            model: geminiModel,
             generatedAt: toLocalISO(new Date())
           };
         } else if (existingComment) {
@@ -265,7 +273,7 @@ async function main(): Promise<number> {
         console.warn("[ai-comment] fetch failed:", e);
         if (existingComment) comment = existingComment;
       }
-    } else if (existingComment && (!shouldUpdateComment || !githubToken)) {
+    } else if (existingComment && (!shouldUpdateComment || !geminiApiKey)) {
       comment = existingComment;
     }
   } catch(e) {
