@@ -26,22 +26,24 @@
 <div class="sp-header-divider"></div>
 
 <main>
-  <section class="weather-forecast-section">
-    <div class="weather-forecast-header">
-      <span class="weather-forecast-title">天気予報</span>
-      <span class="weather-forecast-loc" id="weatherForecastLoc">Tokyo</span>
-    </div>
-    <div class="weather-forecast-card" id="weatherForecastCard">
-      <!-- 動的に天気予報をここに描画 -->
-    </div>
-  </section>
   <div id="aiComment" class="ai-comment" hidden></div>
-  <section class="calendar" id="calendarSection">
-    <div class="calendar-header">
-      <span id="calendarMonth"></span>
-    </div>
-    <div class="calendar-grid" id="calendarGrid"></div>
-  </section>
+  <div class="sp-main-row">
+    <section class="calendar" id="calendarSection">
+      <div class="calendar-header">
+        <span id="calendarMonth"></span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+    <section class="weather-forecast-section">
+      <div class="weather-forecast-header">
+        <span class="weather-forecast-title">天気予報</span>
+        <span class="weather-forecast-loc" id="weatherForecastLoc">Tokyo</span>
+      </div>
+      <div class="weather-forecast-card" id="weatherForecastCard">
+        <!-- 動的に天気予報をここに描画 -->
+      </div>
+    </section>
+  </div>
 </main>
 
   <footer>
