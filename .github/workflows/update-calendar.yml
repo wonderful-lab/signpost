@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  models: read
 concurrency:
   group: 'update-calendar'
   cancel-in-progress: true
@@ -22,6 +23,8 @@ jobs:
         run: npm ci
       - name: Fetch latest calendar data
         run: npm run fetch-calendar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
