@@ -5,7 +5,6 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  models: read
 concurrency:
   group: 'update-calendar'
   cancel-in-progress: true
@@ -24,7 +23,7 @@ jobs:
       - name: Fetch latest calendar data
         run: npm run fetch-calendar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
