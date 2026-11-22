@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T17:59:09+00:00",
+ "generatedAt": "2026-11-22T18:48:14+00:00",
  "events": [
   {
    "title": "Busy",
@@ -10,49 +10,49 @@
   }
  ],
  "weather": {
-  "date": "2026-11-22",
-  "fetchedAt": "2026-11-21T15:45:51+00:00",
-  "tempC": 7.5,
-  "weatherCode": 1,
-  "highC": 9.5,
-  "lowC": 6.3,
+  "date": "2026-11-23",
+  "fetchedAt": "2026-11-22T18:48:12+00:00",
+  "tempC": 5.6,
+  "weatherCode": 0,
+  "highC": 14.6,
+  "lowC": 5.5,
   "days": [
-   {
-    "date": "2026-11-22",
-    "weatherCode": 2,
-    "highC": 9.5,
-    "lowC": 6.3
-   },
    {
     "date": "2026-11-23",
     "weatherCode": 2,
-    "highC": 14.3,
-    "lowC": 6.2
+    "highC": 14.6,
+    "lowC": 5.5
    },
    {
     "date": "2026-11-24",
-    "weatherCode": 65,
-    "highC": 14.4,
+    "weatherCode": 63,
+    "highC": 14,
     "lowC": 6.8
    },
    {
     "date": "2026-11-25",
-    "weatherCode": 3,
-    "highC": 9.4,
-    "lowC": 5.8
+    "weatherCode": 2,
+    "highC": 9.8,
+    "lowC": 6.8
    },
    {
     "date": "2026-11-26",
     "weatherCode": 3,
     "highC": 13.9,
-    "lowC": 5.8
+    "lowC": 6.3
+   },
+   {
+    "date": "2026-11-27",
+    "weatherCode": 51,
+    "highC": 18.8,
+    "lowC": 9.7
    }
   ]
  },
  "comment": {
   "date": "2026-11-23",
-  "text": "本日は晴れ間もありそうです。冷え込みますので、暖かくしてお出かけください。",
+  "text": "本日は晴天で穏やかな一日となりそうです。お出かけの際は、朝晩の冷え込みにどうぞお気をつけください。",
   "model": "gemini-3.1-flash-lite",
-  "generatedAt": "2026-11-22T17:59:09+00:00"
+  "generatedAt": "2026-11-22T18:48:14+00:00"
  }
 }
