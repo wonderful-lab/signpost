@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-26T13:20:10+00:00",
+ "generatedAt": "2026-11-26T15:01:52+00:00",
  "events": [
   {
    "title": "Busy",
@@ -24,42 +24,42 @@
   }
  ],
  "weather": {
-  "date": "2026-11-26",
-  "fetchedAt": "2026-11-25T15:06:16+00:00",
-  "tempC": 8.6,
+  "date": "2026-11-27",
+  "fetchedAt": "2026-11-26T15:01:48+00:00",
+  "tempC": 13.2,
   "weatherCode": 1,
-  "highC": 15.5,
-  "lowC": 8.6,
+  "highC": 20,
+  "lowC": 12.8,
   "days": [
    {
-    "date": "2026-11-26",
-    "weatherCode": 3,
-    "highC": 15.5,
-    "lowC": 8.6
-   },
-   {
     "date": "2026-11-27",
-    "weatherCode": 53,
-    "highC": 20.5,
-    "lowC": 13
+    "weatherCode": 2,
+    "highC": 20,
+    "lowC": 12.8
    },
    {
     "date": "2026-11-28",
-    "weatherCode": 81,
-    "highC": 15.9,
-    "lowC": 6
+    "weatherCode": 63,
+    "highC": 16.9,
+    "lowC": 9
    },
    {
     "date": "2026-11-29",
-    "weatherCode": 80,
-    "highC": 10.1,
-    "lowC": 5.7
+    "weatherCode": 55,
+    "highC": 10.8,
+    "lowC": 5.8
    },
    {
     "date": "2026-11-30",
+    "weatherCode": 0,
+    "highC": 15.1,
+    "lowC": 4.9
+   },
+   {
+    "date": "2026-12-01",
     "weatherCode": 1,
-    "highC": 15.9,
-    "lowC": 4.8
+    "highC": 17.8,
+    "lowC": 11.4
    }
   ]
  },
