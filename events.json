@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-28T14:53:26+00:00",
+ "generatedAt": "2026-11-28T15:48:26+00:00",
  "events": [
   {
    "title": "Busy",
@@ -24,49 +24,49 @@
   }
  ],
  "weather": {
-  "date": "2026-11-28",
-  "fetchedAt": "2026-11-27T16:01:28+00:00",
-  "tempC": 16,
+  "date": "2026-11-29",
+  "fetchedAt": "2026-11-28T15:48:25+00:00",
+  "tempC": 9.7,
   "weatherCode": 2,
-  "highC": 16.5,
-  "lowC": 8.7,
+  "highC": 10.3,
+  "lowC": 6.7,
   "days": [
-   {
-    "date": "2026-11-28",
-    "weatherCode": 61,
-    "highC": 16.5,
-    "lowC": 8.7
-   },
    {
     "date": "2026-11-29",
     "weatherCode": 53,
-    "highC": 10.1,
-    "lowC": 6.8
+    "highC": 10.3,
+    "lowC": 6.7
    },
    {
     "date": "2026-11-30",
     "weatherCode": 1,
-    "highC": 15.9,
-    "lowC": 6.8
+    "highC": 16.8,
+    "lowC": 6.6
    },
    {
     "date": "2026-12-01",
-    "weatherCode": 1,
-    "highC": 17.9,
-    "lowC": 11.4
+    "weatherCode": 2,
+    "highC": 19.6,
+    "lowC": 9.3
    },
    {
     "date": "2026-12-02",
-    "weatherCode": 3,
-    "highC": 17.4,
-    "lowC": 9.7
+    "weatherCode": 45,
+    "highC": 17.2,
+    "lowC": 6.6
+   },
+   {
+    "date": "2026-12-03",
+    "weatherCode": 53,
+    "highC": 19.1,
+    "lowC": 8.8
    }
   ]
  },
  "comment": {
-  "date": "2026-11-28",
-  "text": "本日は曇り空で少し肌寒そうです。羽織るものがあると安心ですね。快適にお過ごしください。",
+  "date": "2026-11-29",
+  "text": "本日は曇りで冷え込みそうです。暖かくしてお過ごしください。",
   "model": "gemini-3.1-flash-lite",
-  "generatedAt": "2026-11-27T16:01:29+00:00"
+  "generatedAt": "2026-11-28T15:48:26+00:00"
  }
 }
